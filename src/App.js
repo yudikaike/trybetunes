@@ -7,7 +7,7 @@ import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
 import ProfileEdit from './pages/ProfileEdit';
 import Search from './pages/Search';
-import Loading from './pages/Loading';
+import Loading from './components/Loading';
 import { createUser } from './services/userAPI';
 
 class App extends React.Component {
