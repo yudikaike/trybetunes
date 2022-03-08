@@ -8,7 +8,9 @@ import Profile from './pages/Profile';
 import ProfileEdit from './pages/ProfileEdit';
 import Search from './pages/Search';
 import Loading from './components/Loading';
+import Albums from './components/Albums';
 import { createUser } from './services/userAPI';
+import searchAlbumsAPI from './services/searchAlbumsAPI';
 
 class App extends React.Component {
   constructor() {
@@ -16,14 +18,18 @@ class App extends React.Component {
     this.state = {
       name: '',
       search: '',
+      artist: '',
+      albums: [],
       isButtonDisabled: true,
       isLoggedIn: false,
       isLoading: false,
+      isResolved: false,
     };
     this.handleLogin = this.handleLogin.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleRedirect = this.handleRedirect.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
+    this.renderAlbums = this.renderAlbums.bind(this);
   }
 
   handleLogin({ target }) {
@@ -51,6 +57,7 @@ class App extends React.Component {
       });
     } else {
       this.setState({
+        [name]: value,
         isButtonDisabled: true,
       });
     }
@@ -89,8 +96,50 @@ class App extends React.Component {
     );
   }
 
+  handleRenderAlbums() {
+    const { isLoading, isResolved, albums, artist } = this.state;
+    if (isLoading) {
+      return (
+        <div>
+          <Loading />
+        </div>
+      );
+    }
+    if (isResolved) {
+      if (albums.length === 0) {
+        return (
+          <div>
+            Nenhum álbum foi encontrado
+          </div>
+        );
+      }
+      return (
+        <div>
+          <h2>{`Resultado de álbuns de: ${artist}`}</h2>
+          <Albums albums={ albums } />
+        </div>
+      );
+    }
+  }
+
+  async renderAlbums() {
+    const { search } = this.state;
+    this.setState({
+      isLoading: true,
+      isResolved: false,
+    });
+    const albums = await searchAlbumsAPI(search);
+    this.setState({
+      isLoading: false,
+      isResolved: true,
+      albums,
+      artist: search,
+      search: '',
+    });
+  }
+
   render() {
-    const { isButtonDisabled } = this.state;
+    const { isButtonDisabled, search } = this.state;
     return (
       <BrowserRouter>
         <Switch>
@@ -98,15 +147,15 @@ class App extends React.Component {
           <Route path="/profile" component={ Profile } />
           <Route path="/favorites" component={ Favorites } />
           <Route path="/album/:id" component={ Album } />
-          <Route
-            path="/search"
-            render={ () => (
-              <Search
-                handleSearch={ this.handleSearch }
-                isButtonDisabled={ isButtonDisabled }
-              />
-            ) }
-          />
+          <Route path="/search">
+            <Search
+              handleSearch={ this.handleSearch }
+              isButtonDisabled={ isButtonDisabled }
+              renderAlbums={ this.renderAlbums }
+              value={ search }
+            />
+            { this.handleRenderAlbums() }
+          </Route>
           <Route exact path="/">
             { this.handleRedirect() }
           </Route>
