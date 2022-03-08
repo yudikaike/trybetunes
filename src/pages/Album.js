@@ -3,7 +3,7 @@ import Header from '../components/Header';
 import Loading from '../components/Loading';
 import MusicCard from '../components/MusicCard';
 import getMusics from '../services/musicsAPI';
-import { addSong } from '../services/favoriteSongsAPI';
+import { addSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
 
 class Album extends Component {
   constructor() {
@@ -16,10 +16,12 @@ class Album extends Component {
     this.handleGetMusics = this.handleGetMusics.bind(this);
     this.handleFavoriteSongs = this.handleFavoriteSongs.bind(this);
     this.handleCheck = this.handleCheck.bind(this);
+    this.handleGetFavoriteSongs = this.handleGetFavoriteSongs.bind(this);
   }
 
   componentDidMount() {
     this.handleGetMusics();
+    this.handleGetFavoriteSongs();
   }
 
   async handleGetMusics() {
@@ -48,6 +50,18 @@ class Album extends Component {
     this.setState((prevState) => ({
       favorites: [...prevState.favorites, id],
     }));
+  }
+
+  async handleGetFavoriteSongs() {
+    this.setState({
+      isLoading: true,
+    });
+    const favoritesList = await getFavoriteSongs();
+    const trackIds = favoritesList.map((favorite) => favorite.trackId);
+    this.setState({
+      favorites: trackIds,
+      isLoading: false,
+    });
   }
 
   render() {
