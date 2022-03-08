@@ -15,18 +15,35 @@ class App extends React.Component {
     super();
     this.state = {
       name: '',
+      search: '',
       isButtonDisabled: true,
       isLoggedIn: false,
       isLoading: false,
     };
-    this.handleChange = this.handleChange.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleRedirect = this.handleRedirect.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
   }
 
-  handleChange({ target }) {
+  handleLogin({ target }) {
     const { name, value } = target;
     const MIN = 3;
+    if (value.length >= MIN) {
+      this.setState({
+        [name]: value,
+        isButtonDisabled: false,
+      });
+    } else {
+      this.setState({
+        isButtonDisabled: true,
+      });
+    }
+  }
+
+  handleSearch({ target }) {
+    const { name, value } = target;
+    const MIN = 2;
     if (value.length >= MIN) {
       this.setState({
         [name]: value,
@@ -66,13 +83,14 @@ class App extends React.Component {
     return (
       <Login
         isButtonDisabled={ isButtonDisabled }
-        handleChange={ this.handleChange }
+        handleLogin={ this.handleLogin }
         handleSubmit={ this.handleSubmit }
       />
     );
   }
 
   render() {
+    const { isButtonDisabled } = this.state;
     return (
       <BrowserRouter>
         <Switch>
@@ -80,7 +98,15 @@ class App extends React.Component {
           <Route path="/profile" component={ Profile } />
           <Route path="/favorites" component={ Favorites } />
           <Route path="/album/:id" component={ Album } />
-          <Route path="/search" component={ Search } />
+          <Route
+            path="/search"
+            render={ () => (
+              <Search
+                handleSearch={ this.handleSearch }
+                isButtonDisabled={ isButtonDisabled }
+              />
+            ) }
+          />
           <Route exact path="/">
             { this.handleRedirect() }
           </Route>
