@@ -3,7 +3,7 @@ import Header from '../components/Header';
 import Loading from '../components/Loading';
 import MusicCard from '../components/MusicCard';
 import getMusics from '../services/musicsAPI';
-import { addSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
+import { addSong, getFavoriteSongs, removeSong } from '../services/favoriteSongsAPI';
 
 class Album extends Component {
   constructor() {
@@ -15,7 +15,6 @@ class Album extends Component {
     };
     this.handleGetMusics = this.handleGetMusics.bind(this);
     this.handleFavoriteSongs = this.handleFavoriteSongs.bind(this);
-    this.handleCheck = this.handleCheck.bind(this);
     this.handleGetFavoriteSongs = this.handleGetFavoriteSongs.bind(this);
   }
 
@@ -36,20 +35,18 @@ class Album extends Component {
     });
   }
 
-  async handleFavoriteSongs(music) {
+  async handleFavoriteSongs(music, { checked }) {
     this.setState({
       isLoading: true,
     });
-    await addSong(music);
+    if (checked) {
+      await addSong(music);
+    } else if (!checked) {
+      await removeSong(music);
+    }
     this.setState({
       isLoading: false,
     });
-  }
-
-  handleCheck(id) {
-    this.setState((prevState) => ({
-      favorites: [...prevState.favorites, id],
-    }));
   }
 
   async handleGetFavoriteSongs() {
@@ -83,7 +80,7 @@ class Album extends Component {
                   music={ music }
                   favorites={ favorites }
                   handleFavoriteSongs={ this.handleFavoriteSongs }
-                  handleCheck={ this.handleCheck }
+                  handleGetFavoriteSongs={ this.handleGetFavoriteSongs }
                 />)
           ))}
         </div>

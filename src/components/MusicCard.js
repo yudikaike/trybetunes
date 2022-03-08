@@ -7,10 +7,9 @@ class MusicCard extends Component {
   }
 
   addFavoriteSongs({ target }) {
-    const { music, handleFavoriteSongs, handleCheck } = this.props;
-    const { trackId } = music;
-    handleCheck(trackId);
-    handleFavoriteSongs(music);
+    const { music, handleFavoriteSongs, handleGetFavoriteSongs } = this.props;
+    handleFavoriteSongs(music, target);
+    handleGetFavoriteSongs();
   }
 
   render() {
