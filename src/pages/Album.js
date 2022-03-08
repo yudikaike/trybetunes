@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import Loading from '../components/Loading';
 import MusicCard from '../components/MusicCard';
 import getMusics from '../services/musicsAPI';
+import { addSong } from '../services/favoriteSongsAPI';
 
 class Album extends Component {
   constructor() {
@@ -10,7 +11,11 @@ class Album extends Component {
     this.state = {
       isLoading: false,
       musics: [],
+      favorites: [],
     };
+    this.handleGetMusics = this.handleGetMusics.bind(this);
+    this.handleFavoriteSongs = this.handleFavoriteSongs.bind(this);
+    this.handleCheck = this.handleCheck.bind(this);
   }
 
   componentDidMount() {
@@ -29,30 +34,42 @@ class Album extends Component {
     });
   }
 
+  async handleFavoriteSongs(music) {
+    this.setState({
+      isLoading: true,
+    });
+    await addSong(music);
+    this.setState({
+      isLoading: false,
+    });
+  }
+
+  handleCheck(id) {
+    this.setState((prevState) => ({
+      favorites: [...prevState.favorites, id],
+    }));
+  }
+
   render() {
-    const { isLoading, musics } = this.state;
+    const { isLoading, musics, favorites } = this.state;
     return (
       <div>
         <Header />
         <div data-testid="page-album">
-          {isLoading ? <Loading /> : musics.map(({
-            artistName,
-            artworkUrl100,
-            collectionName,
-            trackName,
-            previewUrl,
-          }, index) => (
+          {isLoading ? <Loading /> : musics.map((music, index) => (
             index === 0 ? (
               <div key={ index }>
-                <img src={ artworkUrl100 } alt={ collectionName } />
-                <p data-testid="album-name">{collectionName}</p>
-                <p data-testid="artist-name">{artistName}</p>
+                <img src={ music.artworkUrl100 } alt={ music.collectionName } />
+                <p data-testid="album-name">{music.collectionName}</p>
+                <p data-testid="artist-name">{music.artistName}</p>
               </div>)
               : (
                 <MusicCard
                   key={ index }
-                  trackName={ trackName }
-                  previewUrl={ previewUrl }
+                  music={ music }
+                  favorites={ favorites }
+                  handleFavoriteSongs={ this.handleFavoriteSongs }
+                  handleCheck={ this.handleCheck }
                 />)
           ))}
         </div>
