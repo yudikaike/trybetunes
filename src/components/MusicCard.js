@@ -1,8 +1,21 @@
 import React, { Component } from 'react';
 
 class MusicCard extends Component {
+  constructor() {
+    super();
+    this.addFavoriteSongs = this.addFavoriteSongs.bind(this);
+  }
+
+  addFavoriteSongs({ target }) {
+    const { music, handleFavoriteSongs, handleCheck } = this.props;
+    const { trackId } = music;
+    handleCheck(trackId);
+    handleFavoriteSongs(music);
+  }
+
   render() {
-    const { trackName, previewUrl } = this.props;
+    const { music, favorites } = this.props;
+    const { trackName, previewUrl, trackId } = music;
     return (
       <div>
         <p>{ trackName }</p>
@@ -12,6 +25,16 @@ class MusicCard extends Component {
           <code>audio</code>
           .
         </audio>
+        <label htmlFor={ `checkbox-music-${trackId}` }>
+          <input
+            onChange={ this.addFavoriteSongs }
+            checked={ favorites.some((id) => trackId === id) }
+            type="checkbox"
+            id={ `checkbox-music-${trackId}` }
+            data-testid={ `checkbox-music-${trackId}` }
+          />
+          Favorita
+        </label>
       </div>
     );
   }
