@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 
 class Login extends Component {
   render() {
-    const { isButtonDisabled, handleChange, handleSubmit } = this.props;
+    const { isButtonDisabled, handleLogin, handleSubmit } = this.props;
     return (
       <div data-testid="page-login">
         <form>
           <label htmlFor="login-name-input">
             Login:
             <input
-              onChange={ handleChange }
+              onChange={ handleLogin }
               name="name"
               type="text"
               id="login-name-input"
