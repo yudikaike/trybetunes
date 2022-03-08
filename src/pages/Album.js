@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import Loading from '../components/Loading';
 import MusicCard from '../components/MusicCard';
@@ -88,5 +89,9 @@ class Album extends Component {
     );
   }
 }
+
+Album.propTypes = {
+  id: PropTypes.string.isRequired,
+};
 
 export default Album;

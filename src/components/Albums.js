@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 class Albums extends Component {
@@ -23,5 +24,11 @@ class Albums extends Component {
     );
   }
 }
+
+Albums.propTypes = {
+  albums: PropTypes.arrayOf(
+    PropTypes.string,
+  ).isRequired,
+};
 
 export default Albums;

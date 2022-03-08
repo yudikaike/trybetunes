@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class MusicCard extends Component {
   constructor() {
@@ -38,5 +39,16 @@ class MusicCard extends Component {
     );
   }
 }
+
+MusicCard.propTypes = {
+  music: PropTypes.objectOf(
+    PropTypes.string,
+  ).isRequired,
+  favorites: PropTypes.arrayOf(
+    PropTypes.string,
+  ).isRequired,
+  handleFavoriteSongs: PropTypes.func.isRequired,
+  handleGetFavoriteSongs: PropTypes.func.isRequired,
+};
 
 export default MusicCard;

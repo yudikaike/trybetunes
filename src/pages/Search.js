@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Header from '../components/Header';
 
 class Search extends Component {
@@ -31,5 +32,12 @@ class Search extends Component {
     );
   }
 }
+
+Search.propTypes = {
+  isButtonDisabled: PropTypes.bool.isRequired,
+  handleSearch: PropTypes.func.isRequired,
+  renderAlbums: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
+};
 
 export default Search;

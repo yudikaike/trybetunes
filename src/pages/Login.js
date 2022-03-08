@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class Login extends Component {
   render() {
@@ -29,5 +30,11 @@ class Login extends Component {
     );
   }
 }
+
+Login.propTypes = {
+  isButtonDisabled: PropTypes.bool.isRequired,
+  handleLogin: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+};
 
 export default Login;
